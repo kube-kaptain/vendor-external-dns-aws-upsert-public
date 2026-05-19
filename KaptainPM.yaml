@@ -1,0 +1,58 @@
+apiVersion: kaptain.org/1.18
+kind: kubernetes-bundle-vendor-helm-rendered
+metadata:
+  description: "Vendored ExternalDNS for AWS Route 53 public zones (upsert-only policy)"
+
+spec:
+  layers:
+    - layer-github-flow-strict:[1.3,2.0)
+  main:
+    vendorHelmRendered:
+      repoUrl: 'https://kubernetes-sigs.github.io/external-dns/'
+      chartName: 'external-dns'
+      moveFiles:
+        - source: 'templates/serviceaccount.yaml'
+          destination: 'serviceaccount.yaml'
+        - source: 'templates/clusterrole.yaml'
+          destination: 'clusterrole.yaml'
+        - source: 'templates/clusterrolebinding.yaml'
+          destination: 'clusterrolebinding.yaml'
+        - source: 'templates/deployment.yaml'
+          destination: 'deployment.yaml'
+        - source: 'templates/service.yaml'
+          destination: 'service.yaml'
+      sedReplace:
+        perFile:
+          - file: 'deployment.yaml'
+            patterns:
+              - 's|--log-level=info|--log-level=${VendorExternalDnsAwsUpsertPublic/LogLevel}|'
+              - 's|--log-format=text|--log-format=${VendorExternalDnsAwsUpsertPublic/LogFormat}|'
+              - 's|--interval=1m|--interval=${VendorExternalDnsAwsUpsertPublic/Interval}|'
+      yqTransform:
+        perFile:
+          - file: 'clusterrole.yaml'
+            expressions:
+              - '.metadata.name = "${Environment}." + .metadata.name'
+          - file: 'clusterrolebinding.yaml'
+            expressions:
+              - '.metadata.name = "${Environment}." + .metadata.name'
+              - '.roleRef.name = "${Environment}." + .roleRef.name'
+          - file: 'deployment.yaml'
+            expressions:
+              - '.spec.template.spec.containers[].args[] style=""'
+      imageRetags:
+        - sourceImageUri: 'registry.k8s.io/external-dns/external-dns:v0.21.0'
+          tagSuffix: 'external-dns'
+    hooks:
+      prePackagePrepare: .github/bin/pre-package-prepare.bash
+  global:
+    release:
+      versioning:
+        maxParts: '4'
+        strategy: file-pattern-match
+        patternType: custom
+        source:
+          subPath: src/config
+          fileName: VendorHelmRenderedVersion
+          pattern: '^v?([0-9]+\.[0-9]+\.[0-9]+)$'
+          prefixParts: '3'
