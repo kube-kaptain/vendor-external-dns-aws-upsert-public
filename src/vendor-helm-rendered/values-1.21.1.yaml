@@ -18,7 +18,7 @@ image:  # @schema additionalProperties: false
 imagePullSecrets: []  # @schema item: object
 
 # -- (string) Override the name of the chart.
-nameOverride:  # @schema type:[string, null]; default: null
+nameOverride: "${ProjectName}"  # @schema type:[string, null]; default: null
 
 # -- (string) Override the full name of the chart.
 fullnameOverride:  # @schema type:[string, null]; default: null
@@ -46,7 +46,10 @@ serviceAccount:
 
 service:
   # -- Service annotations.
-  annotations: {}
+  annotations:
+    prometheus.io/scrape: 'true'
+    prometheus.io/port: '7979'
+    prometheus.io/path: /metrics
   # -- Service HTTP port.
   port: 7979  # @schema minimum:0; default:7979
   # -- Service IP families (e.g. IPv4 and/or IPv6).
@@ -227,6 +230,7 @@ sourceNamespace:  # @schema type:[string, null]; default: null
 sources:
   - service
   - ingress
+  - crd
 
 # -- How DNS records are synchronized between sources and providers; available values are `create-only`, `sync`, & `upsert-only`.
 policy: upsert-only  # @schema enum:[create-only, sync, upsert-only]; type:string; default: "upsert-only"
@@ -235,7 +239,7 @@ policy: upsert-only  # @schema enum:[create-only, sync, upsert-only]; type:strin
 # Valid values are `txt`, `aws-sd`, `dynamodb` & `noop`.
 registry: txt  # @schema enum:[txt, aws-sd, dynamodb, noop]; default: "txt"
 # -- (string) Specify an identifier for this instance of _ExternalDNS_ when using a registry other than `noop`.
-txtOwnerId:  # @schema type:[string, null]; default: null
+txtOwnerId: "${ProjectName}"  # @schema type:[string, null]; default: null
 # -- (string) Specify a prefix for the domain names of TXT records created for the `txt` registry.
 # Mutually exclusive with `txtSuffix`.
 txtPrefix:  # @schema type:[string, null]; default: null
@@ -259,7 +263,15 @@ annotationFilter:  # @schema type: [string,null]; default: null
 annotationPrefix:  # @schema type: [string,null]; default: null
 
 # -- Record types to manage (default: A, AAAA, CNAME)
-managedRecordTypes: []  # @schema type: [array, null]; item: string; uniqueItems: true
+managedRecordTypes:  # @schema type: [array, null]; item: string; uniqueItems: true
+  - A
+  - AAAA
+  - CNAME
+  - MX
+  - NS
+  - PTR
+  - SRV
+  - TXT
 
 provider:  # @schema type: [object, string]
   # -- _ExternalDNS_ provider name; for the available providers and how to configure them see [README](https://github.com/kubernetes-sigs/external-dns/blob/master/charts/external-dns/README.md#providers).
@@ -321,7 +333,15 @@ provider:  # @schema type: [object, string]
 
 # -- Extra arguments to provide to _ExternalDNS_.
 # An array or map can be used, with maps allowing for value overrides; maps also support slice values to use the same arg multiple times.
-extraArgs: {}  # @schema type: [array, null, object]; item: string; uniqueItems: true
+extraArgs:  # @schema type: [array, null, object]; item: string; uniqueItems: true
+  - --aws-zone-type=public
+  - --txt-prefix=_${ProjectName}.
+  - --events=${VendorExternalDnsAwsUpsertPublic/Events}
+  - --min-event-sync-interval=${VendorExternalDnsAwsUpsertPublic/MinEventSyncInterval}
+  - --aws-zones-cache-duration=${VendorExternalDnsAwsUpsertPublic/AwsZonesCacheDuration}
+  - --aws-evaluate-target-health=${VendorExternalDnsAwsUpsertPublic/AwsEvaluateTargetHealth}
+  - --min-ttl=${VendorExternalDnsAwsUpsertPublic/MinTtl}
+  - --namespace=${VendorExternalDnsAwsUpsertPublic/Namespace}
 
 secretConfiguration:
   # -- If `true`, create a `Secret` to store sensitive provider configuration (**DEPRECATED**).
