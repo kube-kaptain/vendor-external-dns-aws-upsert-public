@@ -55,6 +55,10 @@ spec:
               - '.spec.template.spec.containers[0].startupProbe.periodSeconds = "${VendorExternalDnsAwsUpsertPublic/ProbeStartupPeriod}" | .spec.template.spec.containers[0].startupProbe.periodSeconds style=""'
               - '.spec.template.spec.containers[0].startupProbe.timeoutSeconds = "${VendorExternalDnsAwsUpsertPublic/ProbeTimeoutSeconds}" | .spec.template.spec.containers[0].startupProbe.timeoutSeconds style=""'
               - '.spec.template.spec.containers[0].startupProbe.failureThreshold = "${VendorExternalDnsAwsUpsertPublic/ProbeStartupFailureThreshold}" | .spec.template.spec.containers[0].startupProbe.failureThreshold style=""'
+              - '.spec.template.spec.containers[0].resources.requests.cpu = "${VendorExternalDnsAwsUpsertPublic/CpuRequest}" | .spec.template.spec.containers[0].resources.requests.cpu style="double"'
+              - '.spec.template.spec.containers[0].resources.requests.memory = "${VendorExternalDnsAwsUpsertPublic/Memory}" | .spec.template.spec.containers[0].resources.requests.memory style="double"'
+              - '.spec.template.spec.containers[0].resources.limits.memory = "${VendorExternalDnsAwsUpsertPublic/Memory}" | .spec.template.spec.containers[0].resources.limits.memory style="double"'
+              - '.spec.template.spec.containers[0].env = ((.spec.template.spec.containers[0].env // []) + [{"name":"GOMEMLIMIT","valueFrom":{"resourceFieldRef":{"resource":"limits.memory","divisor":"${VendorExternalDnsAwsUpsertPublic/GoMemLimitDivisor}"}}}])'
       imageRetags:
         - sourceImageUri: 'registry.k8s.io/external-dns/external-dns:v0.21.0'
           tagSuffix: 'external-dns'
