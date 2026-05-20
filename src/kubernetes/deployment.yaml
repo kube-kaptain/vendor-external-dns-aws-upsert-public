@@ -76,10 +76,10 @@ spec:
             - --provider=aws
             - --aws-zone-type=public
             - --txt-prefix=_${ProjectName}.
-            - --events=${VendorExternalDnsAwsUpsertPublic/Events}
+            - ${VendorExternalDnsAwsUpsertPublic/EventsFlag}
             - --min-event-sync-interval=${VendorExternalDnsAwsUpsertPublic/MinEventSyncInterval}
             - --aws-zones-cache-duration=${VendorExternalDnsAwsUpsertPublic/AwsZonesCacheDuration}
-            - --aws-evaluate-target-health=${VendorExternalDnsAwsUpsertPublic/AwsEvaluateTargetHealth}
+            - --aws-evaluate-target-health
             - --min-ttl=${VendorExternalDnsAwsUpsertPublic/MinTtl}
             - --namespace=${VendorExternalDnsAwsUpsertPublic/Namespace}
           ports:
