@@ -116,7 +116,4 @@ spec:
               memory: "${VendorExternalDnsAwsUpsertPublic/Memory}"
           env:
             - name: GOMEMLIMIT
-              valueFrom:
-                resourceFieldRef:
-                  resource: limits.memory
-                  divisor: ${VendorExternalDnsAwsUpsertPublic/GoMemLimitDivisor}
+              value: ${VendorExternalDnsAwsUpsertPublic/GoMemLimit}

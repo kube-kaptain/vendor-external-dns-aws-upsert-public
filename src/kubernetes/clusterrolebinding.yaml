@@ -2,13 +2,13 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: ${Environment}.vendor-external-dns-aws-upsert-public-viewer
+  name: ${Environment}.vendor-external-dns-aws-upsert-public
   labels:
-    app.kubernetes.io/name: ${Environment}.vendor-external-dns-aws-upsert-public-viewer
+    app.kubernetes.io/name: ${Environment}.vendor-external-dns-aws-upsert-public
     app.kubernetes.io/instance: vendor-external-dns-aws-upsert-public
     app.kubernetes.io/version: "${Version}"
     app.kubernetes.io/managed-by: Kaptain
-    app: ${Environment}.vendor-external-dns-aws-upsert-public-viewer
+    app: ${Environment}.vendor-external-dns-aws-upsert-public
     app.kubernetes.io/part-of: ${ProductName}
     kaptain.org/environment: ${Environment}
     kaptain.org/product: ${ProductName}
