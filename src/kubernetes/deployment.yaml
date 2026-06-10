@@ -82,6 +82,7 @@ spec:
             - --aws-evaluate-target-health
             - --min-ttl=${VendorExternalDnsAwsUpsertPublic/MinTtl}
             - --namespace=${VendorExternalDnsAwsUpsertPublic/Namespace}
+            - --annotation-filter=${VendorExternalDnsAwsUpsertPublic/AnnotationFilter}
           ports:
             - name: http
               protocol: TCP

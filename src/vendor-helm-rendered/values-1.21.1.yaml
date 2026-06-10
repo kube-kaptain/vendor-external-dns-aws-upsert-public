@@ -342,6 +342,7 @@ extraArgs:  # @schema type: [array, null, object]; item: string; uniqueItems: tr
   - --aws-evaluate-target-health
   - --min-ttl=${VendorExternalDnsAwsUpsertPublic/MinTtl}
   - --namespace=${VendorExternalDnsAwsUpsertPublic/Namespace}
+  - --annotation-filter=${VendorExternalDnsAwsUpsertPublic/AnnotationFilter}
 
 secretConfiguration:
   # -- If `true`, create a `Secret` to store sensitive provider configuration (**DEPRECATED**).
