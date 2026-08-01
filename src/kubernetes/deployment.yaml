@@ -2,14 +2,14 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: vendor-external-dns-aws-upsert-public
+  name: ${ProjectName}
   namespace: ${Environment}
   labels:
-    app.kubernetes.io/name: vendor-external-dns-aws-upsert-public
+    app.kubernetes.io/name: ${ProjectName}
     app.kubernetes.io/instance: vendor-external-dns-aws-upsert-public
     app.kubernetes.io/version: "${Version}"
     app.kubernetes.io/managed-by: Kaptain
-    app: vendor-external-dns-aws-upsert-public
+    app: ${ProjectName}
     app.kubernetes.io/part-of: ${ProductName}
     kaptain.org/environment: ${Environment}
     kaptain.org/product: ${ProductName}
@@ -33,9 +33,10 @@ spec:
       labels:
         app.kubernetes.io/name: ${ProjectName}
         app.kubernetes.io/instance: vendor-external-dns-aws-upsert-public
+        app: ${ProjectName}
     spec:
       automountServiceAccountToken: true
-      serviceAccountName: vendor-external-dns-aws-upsert-public
+      serviceAccountName: ${ProjectName}
       securityContext:
         fsGroup: 65534
         runAsNonRoot: true
