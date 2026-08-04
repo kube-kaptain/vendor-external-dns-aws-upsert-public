@@ -65,7 +65,8 @@ spec:
             - --source=crd
             - --policy=upsert-only
             - --registry=txt
-            - --txt-owner-id=${ProjectName}
+            - --txt-owner-id=${Environment}.${ProjectName}
+            - --txt-prefix=_${ProjectName}.
             - --managed-record-types=A
             - --managed-record-types=AAAA
             - --managed-record-types=CNAME
@@ -76,7 +77,6 @@ spec:
             - --managed-record-types=TXT
             - --provider=aws
             - --aws-zone-type=public
-            - --txt-prefix=_${ProjectName}.
             - ${VendorExternalDnsAwsUpsertPublic/EventsFlag}
             - --min-event-sync-interval=${VendorExternalDnsAwsUpsertPublic/MinEventSyncInterval}
             - --aws-zones-cache-duration=${VendorExternalDnsAwsUpsertPublic/AwsZonesCacheDuration}
